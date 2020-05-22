@@ -25,13 +25,13 @@ int main(int argc, char **argv) {
   // Initialize the memory
   int status = SUCCESS;
     
-  printf("Initializing to run CUDA kernel\n");
+  printf("Initializing memory to run CUDA kernel\n");
 
   try_func( status, "Init Kernel Failed", 
       init_kernel( &x_vals, &y_vals, &results, &exp_vals, 
       &d_x_vals, &d_y_vals, &d_results, &num_bytes, num_items ) );
 
-  printf( "Trying to generate data for the the kernel run\n" );
+  printf( "Trying to generate data for the kernel to run\n" );
   
   try_func( status, "Generate Kernel Data Failed", 
     gen_kernel_data( x_vals, y_vals, num_items, 5 ) );
@@ -41,19 +41,10 @@ int main(int argc, char **argv) {
 
   printf( "Trying to run CUDA kernel\n" );
 
-  
-  try_func( status, "Run Rolled Add Kernel Failed", 
+  try_func( status, "Run Add Kernel Failed", 
     run_kernel( x_vals, y_vals, results, d_x_vals, d_y_vals, d_results, 
-      num_bytes, num_items, ROLLED_SEL_VAL ) );
+      num_bytes, num_items ) );
   
-  try_func( status, "Run Unrolled by Four Add Kernel Failed", 
-    run_kernel( x_vals, y_vals, results, d_x_vals, d_y_vals, d_results, 
-      num_bytes, num_items, UNROLLED_FOUR_SEL_VAL ) );
-  
-  try_func( status, "Run Rolled by Eight Add Kernel Failed", 
-    run_kernel( x_vals, y_vals, results, d_x_vals, d_y_vals, d_results, 
-      num_bytes, num_items, UNROLLED_EIGHT_SEL_VAL ) );
- 
   try_func( status, "Check Kernel Failed.", 
       check_kernel( results, exp_vals, num_items ) );
   

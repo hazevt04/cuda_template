@@ -22,15 +22,15 @@ int gen_kernel_data( float4* x_vals, float4* y_vals,
 int gen_expected_data( float4* const x_vals, 
    float4* const y_vals, float4* exp_vals, const int num_items );
 
-std::string get_kernel_name( int kernel_sel );
 
 int run_kernel( float4* const x_vals, float4* const y_vals, 
    float4* results, float4* const d_x_vals, float4* const d_y_vals,
-   float4* d_results, const size_t num_bytes, const int num_items, 
-   const int kernel_sel );
+   float4* d_results, const size_t num_bytes, const int num_items );
+
 
 int check_kernel( float4* const results, float4* const exp_vals, 
    const int num_items );
+
 
 int deinit_kernel( float4* x_vals, float4* y_vals, float4* results,
    float4* exp_vals, float4* d_x_vals, float4* d_y_vals, 

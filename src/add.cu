@@ -1,5 +1,5 @@
 
-#include "add_kernels.cuh"
+#include "add_kernel.cuh"
 #include "add.cuh"
 
 
@@ -83,25 +83,6 @@ int gen_expected_data( float4* const x_vals, float4* const y_vals, float4* exp_v
   return SUCCESS;
 }
 
-std::string get_kernel_name( int kernel_sel ) {
-  std::string kernel_name;
-  switch( kernel_sel ) {
-    case ROLLED_SEL_VAL:
-      kernel_name = "Rolled Add";
-      break;
-    case UNROLLED_FOUR_SEL_VAL:
-      kernel_name = "Unrolled by Four Add";
-      break;
-    case UNROLLED_EIGHT_SEL_VAL:
-      kernel_name = "Unrolled by Eight Add";
-      break;
-    default:
-      kernel_name = "Unknown name";
-      break;
-  }
-  return kernel_name;
-}
-
 
 //////////////////////////////////////
 // Run Kernel
@@ -110,12 +91,12 @@ std::string get_kernel_name( int kernel_sel ) {
 //////////////////////////////////////
 int run_kernel( float4* const x_vals, float4* const y_vals, float4* results,
     float4* const d_x_vals, float4* const d_y_vals, float4* d_results, 
-    const size_t num_bytes, const int num_items, const int kernel_sel ) {
+    const size_t num_bytes, const int num_items ) {
 
   cudaError_t cerror = cudaSuccess;
   cudaEvent_t start;
   cudaEvent_t stop;
-  std::string kernel_name = get_kernel_name( kernel_sel );
+  std::string kernel_name = "Add";
   
   int threads_per_block = 256;
 
@@ -129,19 +110,8 @@ int run_kernel( float4* const x_vals, float4* const y_vals, float4* results,
 
   try_cuda_func( cerror, cudaEventRecord(start) );
 
-  switch( kernel_sel ) {
-    case ROLLED_SEL_VAL:
-      add_rolled<<<num_blocks, threads_per_block, 0>>>( d_results, d_x_vals, d_y_vals, num_items);
-      break;
-    case UNROLLED_FOUR_SEL_VAL:
-      add_unrolled_four<<<num_blocks, threads_per_block, 0>>>( d_results, d_x_vals, d_y_vals, num_items);
-      break;
-    case UNROLLED_EIGHT_SEL_VAL:
-      add_unrolled_eight<<<num_blocks, threads_per_block, 0>>>( d_results, d_x_vals, d_y_vals, num_items);
-      break;
-    default:
-      add_rolled<<<num_blocks, threads_per_block, 0>>>( d_results, d_x_vals, d_y_vals, num_items);
-  }
+  add<<<num_blocks, threads_per_block, 0>>>( d_results, d_x_vals, d_y_vals, num_items);
+
   try_cuda_func( cerror, cudaEventRecord(stop) );
   try_cuda_func( cerror, cudaEventSynchronize(stop) );
   

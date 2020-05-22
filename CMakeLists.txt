@@ -6,7 +6,7 @@ project( foo LANGUAGES CXX CUDA )
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-set(CUDA_SEPARABLE_COMPILATION ON)
+#set(CUDA_SEPARABLE_COMPILATION ON)
 find_package(CUDA QUIET REQUIRED)
 
 # Selects GPU arch flags for nvcc based on target_CUDA_architectures
@@ -24,14 +24,16 @@ set(EXEC_NAME "${CMAKE_PROJECT_NAME}")
 set(SRCS
    "src/utils.cpp"
    "src/my_file_io_funcs.cpp"
-   "src/add_kernels.cu"
+   "src/add_kernel.cu"
    "src/add.cu"
    "src/main.cpp"
    )
 
 include_directories( "include" )
 
-cuda_add_executable( "${EXEC_NAME}" "${SRCS}" )
-target_link_libraries( "${EXEC_NAME}" m )
+cuda_add_executable( ${EXEC_NAME} "${SRCS}" )
+target_link_libraries( ${EXEC_NAME} m )
+
+set_property(TARGET ${EXEC_NAME} PROPERTY CUDA_SEPARABLE_COMPILATION ON)
 
 
