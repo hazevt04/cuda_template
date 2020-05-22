@@ -2,11 +2,6 @@
 
 #include "add.cuh"
 
-// Empirically-determined maximum value for num_items. 
-// 1<<29 exits with the vague 'killed' message. 
-// 1<<30 causes a cuda error.
-// Assuming floats, this makes each array take 1 GiB
-#define MAX_NUM_ITEMS (1<<28)
 
 int main(int argc, char **argv) {
 
@@ -18,6 +13,10 @@ int main(int argc, char **argv) {
   float4* d_y_vals = NULL;
   float4* d_results = NULL;
 
+  // Empirically-determined maximum value for num_items. 
+  // 1<<29 exits with the vague 'killed' message. 
+  // 1<<30 causes a cuda error.
+  // Assuming floats, this makes each array take 1 GiB
   // Empirically-determined maximum number
   int num_items = 1<<21;
   size_t num_bytes = num_items * sizeof(float4);
