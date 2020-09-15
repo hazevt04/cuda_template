@@ -1,7 +1,7 @@
 #ifndef __ADD_KERNEL__
 #define __ADD_KERNEL__
 
-#include "cuda_utils.h"
+#include "my_cuda_utils.hpp"
 
 //////////////////////////////////////
 // THE Kernel (add)

@@ -1,5 +1,4 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#pragma once
 
 #define SUCCESS 0
 #define FAILURE -2
@@ -18,7 +17,7 @@
 #include <iterator>
 #include <exception>
 
-#include "VariadicToOutputStream.h"
+#include "VariadicToOutputStream.hpp"
 
 #ifndef check_status
 #  define check_status( status, msg ) { \
@@ -137,5 +136,3 @@ inline bool compare_floats( float* const read_vals, float* const write_vals, int
 
 int free_these(void *arg1, ...); 
 
-
-#endif

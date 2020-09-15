@@ -1,6 +1,6 @@
 // C++ File for my_file_io_funcs
 
-#include "my_file_io_funcs.h"
+#include "my_file_io_funcs.hpp"
 
 void write_binary_floats_file( float* vals, const char* filename, const int num_vals, 
       const bool debug = false ) {

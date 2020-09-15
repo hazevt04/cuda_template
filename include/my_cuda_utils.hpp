@@ -1,10 +1,9 @@
-#ifndef _CUDA_UTILS_H_
-#define _CUDA_UTILS_H_
+#pragma once
 
-// Utility Macros for CUDA
+// My Utility Macros for CUDA
 
 #include <cuda_runtime.h>
-#include "utils.h"
+#include "my_utils.hpp"
 
 #define check_cuda_error(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
@@ -123,5 +122,3 @@
 
 #endif
 
-
-#endif // ifndef _CUDA_UTILS_H_

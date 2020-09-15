@@ -1,7 +1,6 @@
-#ifndef __VARIADICTOOUTPUTSTREAM_H__
-#define __VARIADICTOOUTPUTSTREAM_H__
+#pragma once
 
-#include "utils.h"
+#include "my_utils.hpp"
 
 // From https://stackoverflow.com/questions/8629382/debug-macro-for-c-with-variable-arguments-without-the-format-string/8629465
 
@@ -31,4 +30,3 @@ private:
    } \
 }
 
-#endif // end of #ifndef __VARIADICTOOUTPUTSTREAM_H__

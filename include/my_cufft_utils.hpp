@@ -1,7 +1,6 @@
-#ifndef __CUFFT_UTILS_H__
-#define __CUFFT_UTILS_H__
+#pragma once
 
-#include "cuda_utils.h"
+#include "my_cuda_utils.hpp"
 
 /////////////////////////////
 // CUFFT Stuff
@@ -86,4 +85,3 @@ inline char const* status_strings[] = {
   check_cufft_status_throw( cufft_status ); \
 }
 
-#endif // end of #ifndef __CUFFT_UTILS_H__

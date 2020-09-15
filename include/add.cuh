@@ -1,7 +1,7 @@
 #ifndef __ADD_CUH__
 #define __ADD_CUH__
 
-#include "cuda_utils.h"
+#include "my_cuda_utils.hpp"
 
 #define ROLLED_SEL_VAL (1<<0)
 #define UNROLLED_FOUR_SEL_VAL (1<<1)
