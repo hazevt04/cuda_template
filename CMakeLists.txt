@@ -25,16 +25,22 @@ set(SRCS
 
 include_directories( 
    "include"
-   #${CUDA_INCLUDE_DIRS}
+   "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
 )
+get_property(inc_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
+foreach(inc_dir ${inc_dirs})
+  message(STATUS "include dir='${inc_dir}'")
+endforeach()
 
 add_executable( ${EXEC_NAME} "${SRCS}" )
 target_link_libraries( ${EXEC_NAME} ${CUDA_cudadevrt_LIBRARY} m )
 
 set_target_properties( ${EXEC_NAME}
-    PROPERTIES
-        CXX_STANDARD 11
-        CXX_STANDARD_REQUIRED YES
-        CXX_EXTENSIONS NO
-        CUDA_SEPARABLE_COMPILATION ON
+   PROPERTIES
+   CXX_STANDARD 11
+   CXX_STANDARD_REQUIRED YES
+   CXX_EXTENSIONS NO
+   CUDA_SEPARABLE_COMPILATION ON
+   CMAKE_CUDA_STANDARD 11
+   CMAKE_CUDA_STANDARD_REQUIRED ON
 )

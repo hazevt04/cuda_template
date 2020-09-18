@@ -16,6 +16,7 @@
 #include <vector>
 #include <iterator>
 #include <exception>
+#include <memory>
 
 #include "VariadicToOutputStream.hpp"
 
@@ -82,6 +83,12 @@
 #ifndef CEILING
 #  define CEILING(a,b) ((a) + ((b)-1))/(b);
 #endif
+
+// Already included in C++14
+template<typename T, typename... Args>
+std::unique_ptr<T> my_make_unique(Args&&... args) {
+    return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+}
 
 // Hacker's Delight Second Edition pg 44 ('doz')
 // Only valid for signed integers, -2^30 < a,b <=(2^30)-1

@@ -63,3 +63,10 @@ bool operator!=(const device_allocator<T1>& lhs, const device_allocator<T2>& rhs
 template<class T>
 using device_vector = std::vector<T, device_allocator<T>>;
 
+
+template <class T>
+void print_vec( const device_vector<T>& vals, const char* prefix = "" ) {
+   std::cout << prefix;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
+   std::cout << std::endl;
+}

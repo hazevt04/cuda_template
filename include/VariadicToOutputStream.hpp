@@ -15,7 +15,7 @@ public:
         return *this;
     }
     ~VariadicToOutputStream() {
-        m_stream << std::endl;
+        //m_stream << std::endl;
     }
 
 private:

@@ -62,3 +62,9 @@ bool operator!=(const managed_allocator_global<T1>& lhs, const managed_allocator
 template<class T>
 using managed_vector_global = std::vector<T, managed_allocator_global<T>>;
 
+template <class T>
+void print_vec( const managed_vector_global<T>& vals, const char* prefix = "" ) {
+   std::cout << prefix;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
+   std::cout << std::endl;
+}

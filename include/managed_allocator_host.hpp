@@ -62,3 +62,9 @@ bool operator!=(const managed_allocator_host<T1>& lhs, const managed_allocator_h
 template<class T>
 using managed_vector_host = std::vector<T, managed_allocator_host<T>>;
 
+template <class T>
+void print_vec( const managed_vector_host<T>& vals, const char* prefix = "" ) {
+   std::cout << prefix;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
+   std::cout << std::endl;
+}

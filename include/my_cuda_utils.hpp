@@ -12,6 +12,19 @@
 #define CUDA_CALLABLE_MEMBER
 #endif
 
+inline void try_cudaStreamCreate( cudaStream_t* pStream ) {
+   try {
+      cudaError_t cerror = cudaStreamCreate( pStream );
+      if ( cerror != cudaSuccess ) {
+         std::string err_msg = "cudaStreamCreate() returned error '";
+         err_msg += std::string{ cudaGetErrorString( cerror ) } + "'";
+         throw std::runtime_error( err_msg );
+      }
+   } catch( std::exception& ex ) {
+      throw;
+   }      
+}
+
 #define check_cuda_error(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
     printf( "%s(): "#loc " ERROR: %s (%d)\n", __func__, \
