@@ -1,17 +1,14 @@
-#ifndef __ADD_KERNEL__
-#define __ADD_KERNEL__
+#pragma once
 
 #include "my_cuda_utils.hpp"
 
 //////////////////////////////////////
 // THE Kernel (add)
 // Kernel function to add the elements 
-// of two arrays x_vals and y_vals. 
+// of two arrays lvals and rvals. 
 //////////////////////////////////////
-__global__ void add(float4* __restrict__ d_results, float4* const __restrict__ d_x_vals, 
-    float4* const __restrict__ d_y_vals, const int num_items );
+template<typename T>
+__global__ void add_kernel( T* __restrict__ sums, T* const __restrict__ lvals, 
+   T* const __restrict__ rvals, const int num_vals );
 
 
-
-
-#endif

@@ -5,6 +5,13 @@
 #include <cuda_runtime.h>
 #include "my_utils.hpp"
 
+// Use for Classes with CUDA (for example)
+#ifdef __CUDACC__
+#define CUDA_CALLABLE_MEMBER __host__ __device__
+#else
+#define CUDA_CALLABLE_MEMBER
+#endif
+
 #define check_cuda_error(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
     printf( "%s(): "#loc " ERROR: %s (%d)\n", __func__, \
@@ -40,7 +47,7 @@
 
 #define check_cuda_error_throw(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
-    throw std::runtime_error(cudaGetErrorString( cerror )); \
+    throw std::runtime_error( cudaGetErrorString( cerror ) ); \
   } \
 }
 

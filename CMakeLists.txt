@@ -19,11 +19,14 @@ set(SRCS
    "src/my_utils.cpp"
    "src/my_file_io_funcs.cpp"
    "src/add_kernel.cu"
-   "src/add.cu"
+   "src/AddGPU.cu"
    "src/main.cpp"
    )
 
-include_directories( "include" )
+include_directories( 
+   "include"
+   #${CUDA_INCLUDE_DIRS}
+)
 
 add_executable( ${EXEC_NAME} "${SRCS}" )
 target_link_libraries( ${EXEC_NAME} ${CUDA_cudadevrt_LIBRARY} m )
