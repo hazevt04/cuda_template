@@ -52,23 +52,21 @@ public:
    }
 
    void gen_data( int seed = 0 ) {
-      //gen_vals<T>( lvals.data(), (T)0, (T)10, num_vals ); 
-      //gen_vals<T>( rvals.data(), (T)0, (T)10, num_vals ); 
       lvals.resize(num_vals);
       rvals.resize(num_vals);
       std::iota( lvals.begin(), lvals.end(), 0 );
-      std::iota( rvals.begin(), rvals.end(), num_vals );
+      std::iota( rvals.begin(), rvals.end(), 0 );
       
       if (debug) {
-         print_vec<T>( lvals, "Generated Lvals:\n", " " ); 
-         print_vec<T>( rvals, "Generated Rvals:\n", " " ); 
+         print_vec<T>( lvals, num_vals, "Generated Lvals:\n", " " ); 
+         print_vec<T>( rvals, num_vals, "Generated Rvals:\n", " " ); 
       }
    }
 
    void run();
    
    void print_sums( const std::string& prefix = "Sums: " ) {
-      print_vec<T>( sums, prefix.data(), " " );
+      print_vec<T>( sums, num_vals, prefix.data(), " " );
    }
 
    ~AddGPU() {

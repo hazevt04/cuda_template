@@ -23,9 +23,15 @@ void AddGPU<T>::run() {
 
       gen_data();
       
+      debug_cout( debug, __func__, "(): lvals.size() is ", lvals.size(), "\n" ); 
+      debug_cout( debug, __func__, "(): rvals.size() is ", rvals.size(), "\n" ); 
+      
+      print_vec<T>( lvals, num_vals, "Lvals: ", " " ); 
+      print_vec<T>( rvals, num_vals, "Rvals: ", " " ); 
+
       cudaStreamAttachMemAsync( *(stream_ptr.get()), lvals.data(), 0, cudaMemAttachGlobal );
       cudaStreamAttachMemAsync( *(stream_ptr.get()), rvals.data(), 0, cudaMemAttachGlobal );
-      
+
       add_kernel<T><<<num_blocks, threads_per_block, num_shared_bytes, *(stream_ptr.get())>>>( 
          sums.data(), lvals.data(), rvals.data(), num_vals 
       );
@@ -36,14 +42,9 @@ void AddGPU<T>::run() {
       try_cuda_func_throw( cerror, cudaStreamSynchronize( *(stream_ptr.get())  ) );
       
       // sums.size() is 0 because the add_kernel modified the data and not a std::vector function
-      sums.resize(num_vals);
-
       debug_cout( debug, __func__, "(): sums.size() is ", sums.size(), "\n" ); 
 
-      if (debug) {
-         print_sums();
-      }
-      debug_cout( debug, __func__, "(): just before returning sums\n" );
+      print_sums( "Sums: " );
 
    } catch( std::exception& ex ) {
       throw;
