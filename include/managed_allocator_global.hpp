@@ -63,8 +63,8 @@ template<class T>
 using managed_vector_global = std::vector<T, managed_allocator_global<T>>;
 
 template <class T>
-void print_vec( const managed_vector_global<T>& vals, const char* prefix = "" ) {
+void print_vec( const managed_vector_global<T>& vals, const char* prefix = "", const char* delim = "\n" ) {
    std::cout << prefix;
-   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
-   std::cout << std::endl;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, delim) );
+   std::cout << "\n";
 }

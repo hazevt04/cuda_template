@@ -121,10 +121,10 @@ void gen_vals( T* vals, const T lower, const T upper, const int num_vals ) {
 }
 
 template <class T>
-void print_vec( const std::vector<T>& vals, const char* prefix = "" ) {
+void print_vec( const std::vector<T>& vals, const char* prefix = "", const char* delim = " " ) {
    std::cout << prefix;
-   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
-   std::cout << std::endl;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, delim) );
+   std::cout << "\n";
 }
 
 void printf_floats( float* const vals, const int num_vals );

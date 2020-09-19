@@ -5,9 +5,6 @@ check_language(CUDA)
 
 project( foo LANGUAGES CXX CUDA )
 
-set(CMAKE_CUDA_STANDARD 11)
-set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-
 list(APPEND CUDA_NVCC_FLAGS "--ptxas-options=-v")
 LIST(APPEND CUDA_NVCC_FLAGS "--use_fast_math")
 
@@ -23,10 +20,20 @@ set(SRCS
    "src/main.cpp"
    )
 
+message(STATUS "CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES is '${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}'")
+
 include_directories( 
    "include"
-   "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
 )
+
+if ( "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}" STREQUAL "" )
+   find_package( CUDA QUIET REQUIRED )
+else()
+   include_directories( 
+      "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
+   )
+endif()
+
 get_property(inc_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
 foreach(inc_dir ${inc_dirs})
   message(STATUS "include dir='${inc_dir}'")

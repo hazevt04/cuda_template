@@ -65,8 +65,8 @@ using device_vector = std::vector<T, device_allocator<T>>;
 
 
 template <class T>
-void print_vec( const device_vector<T>& vals, const char* prefix = "" ) {
+void print_vec( const device_vector<T>& vals, const char* prefix = "", const char* delim = "\n" ) {
    std::cout << prefix;
-   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, "\n") );
-   std::cout << std::endl;
+   std::copy( std::begin(vals), std::end(vals),  std::ostream_iterator<T>(std::cout, delim) );
+   std::cout << "\n";
 }

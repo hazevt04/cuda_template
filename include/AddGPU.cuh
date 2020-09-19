@@ -60,15 +60,15 @@ public:
       std::iota( rvals.begin(), rvals.end(), num_vals );
       
       if (debug) {
-         print_vec<T>( lvals, "Generated Lvals:\n" ); 
-         print_vec<T>( rvals, "Generated Rvals:\n" ); 
+         print_vec<T>( lvals, "Generated Lvals:\n", " " ); 
+         print_vec<T>( rvals, "Generated Rvals:\n", " " ); 
       }
    }
 
-   managed_vector_global<T> run();
+   void run();
    
    void print_sums( const std::string& prefix = "Sums: " ) {
-      print_vec<T>( sums, prefix.data() );
+      print_vec<T>( sums, prefix.data(), " " );
    }
 
    ~AddGPU() {
