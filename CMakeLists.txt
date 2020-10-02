@@ -1,8 +1,5 @@
 cmake_minimum_required( VERSION 3.8 )
 
-include(CheckLanguage)
-check_language(CUDA)
-
 project( foo LANGUAGES CXX CUDA )
 
 list(APPEND CUDA_NVCC_FLAGS "--ptxas-options=-v")
@@ -20,24 +17,11 @@ set(SRCS
    "src/main.cpp"
    )
 
-message(STATUS "CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES is '${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}'")
-
-include_directories( 
+find_package(CUDA REQUIRED)
+include_directories(
    "include"
+   "${CUDA_INCLUDE_DIRS}"
 )
-
-if ( "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}" STREQUAL "" )
-   find_package( CUDA QUIET REQUIRED )
-else()
-   include_directories( 
-      "${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}"
-   )
-endif()
-
-get_property(inc_dirs DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY INCLUDE_DIRECTORIES)
-foreach(inc_dir ${inc_dirs})
-  message(STATUS "include dir='${inc_dir}'")
-endforeach()
 
 add_executable( ${EXEC_NAME} "${SRCS}" )
 target_link_libraries( ${EXEC_NAME} ${CUDA_cudadevrt_LIBRARY} m )

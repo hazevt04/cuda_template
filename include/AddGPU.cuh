@@ -22,7 +22,6 @@ private:
    bool debug;
 
    std::unique_ptr<cudaStream_t> stream_ptr;
-   void gen_kernel_data( int seed );
 
 public:
    AddGPU():
@@ -54,8 +53,8 @@ public:
    void gen_data( int seed = 0 ) {
       lvals.resize(num_vals);
       rvals.resize(num_vals);
-      std::iota( lvals.begin(), lvals.end(), 0 );
-      std::iota( rvals.begin(), rvals.end(), 0 );
+      std::iota( lvals.begin(), lvals.end(), 1 );
+      std::iota( rvals.begin(), rvals.end(), 1 );
       
       if (debug) {
          print_vec<T>( lvals, num_vals, "Generated Lvals:\n", " " ); 
