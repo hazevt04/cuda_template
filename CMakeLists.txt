@@ -34,7 +34,6 @@ LIST(APPEND CUDA_NVCC_FLAGS ${ARCH_FLAGS})
 LIST(APPEND CUDA_NVCC_FLAGS "--ptxas-options=-v")
 LIST(APPEND CUDA_NVCC_FLAGS "--use_fast_math")
 
-
 set(INC_DIRS
    "include"
    ${CUDA_INCLUDE_DIRS}
