@@ -2,7 +2,7 @@
 
 // My Utility Macros for CUDA
 
-#include <cuda_runtime.h>
+//#include <cuda_runtime>
 #include "my_utils.hpp"
 
 #define check_cuda_error(cerror,loc) { \

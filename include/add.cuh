@@ -1,6 +1,7 @@
 #ifndef __ADD_CUH__
 #define __ADD_CUH__
 
+#include <cuda_runtime.h>
 #include "my_cuda_utils.hpp"
 
 #define ROLLED_SEL_VAL (1<<0)
