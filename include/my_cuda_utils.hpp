@@ -2,7 +2,7 @@
 
 // My Utility Macros for CUDA
 
-//#include <cuda_runtime>
+#include <cuda_runtime.h>
 #include "my_utils.hpp"
 
 #define check_cuda_error(cerror,loc) { \
@@ -40,7 +40,7 @@
 
 #define check_cuda_error_throw(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
-    throw std::runtime_error(cudaGetErrorString( cerror )); \
+    throw std::runtime_error{ std::string{ std::string{""#loc ": "} + std::string{cudaGetErrorString( cerror )} + ": " + std::to_string(cerror) } }; \
   } \
 }
 
