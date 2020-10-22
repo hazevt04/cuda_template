@@ -2,6 +2,9 @@
 
 #include "add.cuh"
 
+// just to compile it. it's not actually used
+#include "my_cufft_utils.hpp"
+
 // Empirically-determined maximum value for num_items. 
 // 1<<29 exits with the vague 'killed' message. 
 // 1<<30 causes a cuda error.
