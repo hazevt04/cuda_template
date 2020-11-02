@@ -5,6 +5,26 @@
 #include <cuda_runtime.h>
 #include "my_utils.hpp"
 
+// Use for Classes with CUDA (for example)
+#ifdef __CUDACC__
+#define CUDA_CALLABLE_MEMBER __host__ __device__
+#else
+#define CUDA_CALLABLE_MEMBER
+#endif
+
+inline void try_cudaStreamCreate( cudaStream_t* pStream ) {
+   try {
+      cudaError_t cerror = cudaStreamCreate( pStream );
+      if ( cerror != cudaSuccess ) {
+         std::string err_msg = "cudaStreamCreate() returned error '";
+         err_msg += std::string{ cudaGetErrorString( cerror ) } + "'";
+         throw std::runtime_error( err_msg );
+      }
+   } catch( std::exception& ex ) {
+      throw;
+   }      
+}
+
 #define check_cuda_error(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
     printf( "%s(): "#loc " ERROR: %s (%d)\n", __func__, \
@@ -40,10 +60,9 @@
 
 #define check_cuda_error_throw(cerror,loc) { \
   if ( cerror != cudaSuccess ) { \
-    throw std::runtime_error{ std::string{ std::string{""#loc ": "} + std::string{cudaGetErrorString( cerror )} + ": " + std::to_string(cerror) } }; \
+    throw std::runtime_error{ std::string{ std::string{""#loc ": "} + std::string{cudaGetErrorString(cerror)} + "(" + std::to_string(cerror) + ")" } }; \
   } \
 }
-
 
 #define try_cuda_func(cerror, func) { \
   cerror = func; \
