@@ -90,6 +90,10 @@
 #   define MAX(a, b) ((a) > (b)) ? (a) : (b);
 #endif
 
+#ifndef MIN
+#   define MAX(a, b) ((a) > (b)) ? (a) : (b);
+#endif
+
 
 #ifndef CEILING
 #   define CEILING(a, b) ((a) + ((b)-1)) / (b);
@@ -110,6 +114,26 @@ std::unique_ptr<T> my_make_unique(Args&&... args) {
 // or unsigned integers, 0 < a,b <= (2^31)-1
 inline int difference_or_zero(int a, int b) { return ((a - b) & ~((a - b) >> 31)); }
 
+// Just in case there is no intrinsic
+// From Hacker's Delight
+int my_popcount(unsigned int x);
+
+int my_count_leading_zeros(unsigned int x);
+
+int my_ilog2(unsigned int x);
+
+bool is_divisible_by( const unsigned int& val, const unsigned int& div );
+
+inline bool is_power_of_two( const int& val ) {
+   //return ( my_popcount(val) == 1 );  
+   return ( __builtin_popcount(val) == 1 );
+}
+
+// Hacker's Delight Second Edition pg 291 ('ilog2')
+inline int ilog2( const int& val ) {
+   return ( 31 - __builtin_clz(val) );
+}
+
 
 #define MILLISECONDS_PER_SECOND (1000.0f)
 typedef std::chrono::steady_clock Steady_Clock;
@@ -126,6 +150,11 @@ typedef std::chrono::duration<float, std::nano> Duration_ns;
 // );
 
 bool string_is_palindrome(const std::string& s);
+
+// Boost? Hurrumph!
+// String splitter from SO:
+// https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
+void my_string_splitter( std::vector<std::string>& str_strings, std::string& str, const std::string delimiter, const bool debug); 
 
 template <class T>
 void gen_vals(std::vector<T>& vals, const T lower, const T upper) {
@@ -398,9 +427,4 @@ inline std::string decode_status(int status) {
    return std::string("Unknown status value: " + std::to_string(status) + "\n");
 }
 
-
-// Boost? Hurrumph!
-// String splitter from SO:
-// https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
-void my_string_splitter( std::vector<std::string>& str_strings, std::string& str, const std::string delimiter, const bool debug); 
 
