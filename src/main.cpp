@@ -12,6 +12,19 @@
 // Assuming floats, this makes each array take 1 GiB
 #define MAX_NUM_ITEMS (1<<28)
 
+
+void test_ilog2( const int& val ) {
+   std::cout << "Integer Log2(" << val << ") is " << ilog2( val ) << "\n"; 
+}
+
+
+void test_is_divisible_by( const int& val, const int& div ) {
+   if ( is_divisible_by( val, div ) ) {
+      std::cout << val << " is divisible by " << div << "\n"; 
+   }
+}
+
+
 int main(int argc, char **argv) {
   try {
     float4* x_vals = nullptr;
@@ -32,18 +45,12 @@ int main(int argc, char **argv) {
 
     int seed  = 5;
       
-    std::cout << "Initializing memory to run CUDA kernel\n";
-
     init_kernel( &x_vals, &y_vals, &results, &exp_vals, 
       &d_x_vals, &d_y_vals, &d_results, num_bytes, num_items );
-
-    std::cout << "Trying to generate data for the kernel to run\n";
 
     gen_kernel_data( x_vals, y_vals, num_items, seed, debug );
 
     gen_expected_data( x_vals, y_vals, exp_vals, num_items, debug );
-
-    std::cout << "Trying to run CUDA kernel\n";
 
     run_kernel( x_vals, y_vals, results, d_x_vals, d_y_vals, d_results, 
       num_bytes, num_items, debug );
@@ -59,5 +66,6 @@ int main(int argc, char **argv) {
     std::cout << "ERROR: " << ex.what() << "\n"; 
     return FAILURE;
   }
+
 }
 // end of C++ file for main

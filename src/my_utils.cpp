@@ -4,6 +4,7 @@
 
 // Just in case there is no intrinsic
 // From Hacker's Delight
+// Prefer using __builtin_popcount() if using gcc
 int my_popcount(unsigned int x) {
    x -= ((x >> 1) & 0x55555555);
    x = (x & 0x33333333) + ((x >> 2) & 0x33333333);
@@ -47,5 +48,39 @@ int free_these(void *arg1, ...) {
    return SUCCESS;
 }
 
+
+// In case of no __builtin_clz() and no __builtin_popcount()
+int my_count_leading_zeros(unsigned int x) {
+   x = x | ( x >> 1 );
+   x = x | ( x >> 2 );
+   x = x | ( x >> 4 );
+   x = x | ( x >> 8 );
+   x = x | ( x >> 16 );
+   return my_popcount(~x);
+}
+ 
+// In case of no __builtin_clz() and no __builtin_popcount()
+int my_ilog2(unsigned int x) {
+   x = x | ( x >> 1 );
+   x = x | ( x >> 2 );
+   x = x | ( x >> 4 );
+   x = x | ( x >> 8 );
+   x = x | ( x >> 16 );
+   return (my_popcount(x) - 1);
+}
+
+bool is_divisible_by( const unsigned int& val, const unsigned int& div ) {
+   if ( div > 0 ) {
+      // Only use mod (%) if we really HAVE to...
+      if ( is_power_of_two( div ) ) {
+         unsigned int mask = (1 << (ilog2( div ))) - 1;
+         return ( 0 == ( val & mask ) );
+      } else {
+         return ( 0 == ( val % div ) );
+      }
+   } else {
+      return false;
+   }
+}
 
 // end of C++ file for utils

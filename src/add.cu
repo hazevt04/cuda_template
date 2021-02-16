@@ -18,6 +18,7 @@ void init_kernel( float4** x_vals, float4** y_vals, float4** results,
       cudaError_t cerror = cudaSuccess;
       num_bytes = num_items * sizeof(float4);
 
+      std::cout << "Trying to initialize memory for input and output data...\n";
       // Allocate pinned host memory that is also accessible by the device.
       try_cuda_func( cerror, cudaHostAlloc( (void**)x_vals, num_bytes, cudaHostAllocMapped ) ); 
       try_cuda_func( cerror, cudaHostAlloc( (void**)y_vals, num_bytes, cudaHostAllocMapped ) ); 
@@ -42,6 +43,7 @@ void gen_kernel_data( float4* x_vals, float4* y_vals, const int& num_items, cons
    const bool& debug = false ) {
 
    try {
+      std::cout << "Trying to generate input data...\n";
       // initialize x_vals and y arrays on the host
       srand(seed);
       for ( int index = 0; index < num_items; index++ ) {
@@ -73,6 +75,7 @@ void gen_expected_data( float4* const x_vals, float4* const y_vals, float4* exp_
       const int& num_items, const bool& debug = false ) {
   
    try {
+      std::cout << "Trying to generate expected outputs...\n";
       Time_Point start = Steady_Clock::now();
 
       // Generate expected results
@@ -117,6 +120,8 @@ void run_kernel( float4* const x_vals, float4* const y_vals, float4* results,
       int threads_per_block = 256;
 
       int num_blocks = (num_items + threads_per_block - 1) / threads_per_block;
+    
+      std::cout << "Trying to run CUDA kernel\n";
 
       dout << __func__ << "(): threads_per_block is " << threads_per_block << "\n"; 
       dout << __func__ << "(): num_blocks is " << num_blocks << "\n"; 
@@ -161,6 +166,7 @@ void check_kernel( float4* const results, float4* const exp_vals, const int& num
   
    try {
       float max_error = 2.0;
+      std::cout << "Checking kernel outputs against the expected outputs...\n";
       for ( int index = 0; index < num_items; index++ ) {
 
          if ( fabs( exp_vals[index].x - results[index].x ) > max_error ) {
@@ -202,6 +208,7 @@ void deinit_kernel( float4* x_vals, float4* y_vals, float4* results,
 
    try {
       cudaError_t cerror = cudaSuccess;
+      std::cout << "Freeing memory used for input and output data...\n";
 
       try_cuda_free_host( cerror, x_vals );
       try_cuda_free_host( cerror, y_vals );

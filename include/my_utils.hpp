@@ -63,6 +63,10 @@
 #   define MAX(a, b) ((a) > (b)) ? (a) : (b);
 #endif
 
+#ifndef MIN
+#   define MAX(a, b) ((a) > (b)) ? (a) : (b);
+#endif
+
 
 #ifndef MIN
 #   define MIN(a, b) ((a) < (b)) ? (a) : (b);
@@ -101,7 +105,6 @@ using complex_vector = std::vector<std::complex<T>>;
 template<typename T, size_t size>
 using complex_array = std::array<std::complex<T>, size>;
 
-
 using Steady_Clock = std::chrono::steady_clock;
 using Time_Point = std::chrono::time_point<std::chrono::steady_clock>;
 using Duration = std::chrono::duration<float, std::milli>;
@@ -109,15 +112,36 @@ using Duration_ms = std::chrono::duration<float, std::milli>;
 using Duration_us = std::chrono::duration<float, std::micro>;
 using Duration_ns = std::chrono::duration<float, std::nano>;
 
-
 // Example usage for previous aliases
 // Time_Point start_point = Steady_Clock::now();
 // 
 // // Timed code goes here
 // 
 // Duration_ms section_duration_ms = Steady_Clock::now() - start_point;
+// float seconds = duration_ms.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
 // std::cout << __func__ << "() took " << section_duration_ms.count() << " milliseconds to process "
 //    << num_vals << " values\n";
+// std::cout << __func__ << "() That's an average of " << (num_vals/seconds) " values per second\n\n"; 
+
+// Just in case there is no intrinsic
+// From Hacker's Delight
+int my_popcount(unsigned int x);
+
+int my_count_leading_zeros(unsigned int x);
+
+int my_ilog2(unsigned int x);
+
+bool is_divisible_by( const unsigned int& val, const unsigned int& div );
+
+inline bool is_power_of_two( const int& val ) {
+   //return ( my_popcount(val) == 1 );  
+   return ( __builtin_popcount(val) == 1 );
+}
+
+// Hacker's Delight Second Edition pg 291 ('ilog2')
+inline int ilog2( const int& val ) {
+   return ( 31 - __builtin_clz(val) );
+}
 
 
 // Already included in C++14
@@ -153,16 +177,6 @@ inline std::string decode_status(int status) {
 
 
 int free_these(void* arg1, ...);
-
-
-// Just in case there is no intrinsic
-// From Hacker's Delight
-int my_popcount( unsigned int x );
-
-
-inline bool is_power_of_two( int val ) {
-   return ( my_popcount(val) == 1 );  
-}
 
 
 // Hacker's Delight Second Edition pg 44 ('doz')
