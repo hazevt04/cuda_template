@@ -80,10 +80,12 @@ void gen_expected_data( float4* const x_vals, float4* const y_vals, float4* exp_
 
       // Generate expected results
       for( int index = 0; index < num_items; index++ ) {
-         exp_vals[index].x = x_vals[index].x + y_vals[index].x;
-         exp_vals[index].y = x_vals[index].y + y_vals[index].y;
-         exp_vals[index].z = x_vals[index].z + y_vals[index].z;
-         exp_vals[index].w = x_vals[index].w + y_vals[index].w;
+         exp_vals[index] = x_vals[index] + y_vals[index];
+
+         //exp_vals[index].x = x_vals[index].x + y_vals[index].x;
+         //exp_vals[index].y = x_vals[index].y + y_vals[index].y;
+         //exp_vals[index].z = x_vals[index].z + y_vals[index].z;
+         //exp_vals[index].w = x_vals[index].w + y_vals[index].w;
       } 
       Duration_ms duration_ms = Steady_Clock::now() - start;
 
@@ -165,30 +167,38 @@ void run_kernel( float4* const x_vals, float4* const y_vals, float4* results,
 void check_kernel( float4* const results, float4* const exp_vals, const int& num_items ) {
   
    try {
-      float max_error = 2.0;
+      //float max_error = 2.0;
+      float4 max_error = {2.0, 2.0, 2.0, 2.0};
       std::cout << "Checking kernel outputs against the expected outputs...\n";
       for ( int index = 0; index < num_items; index++ ) {
 
-         if ( fabs( exp_vals[index].x - results[index].x ) > max_error ) {
+         if ( fabs( exp_vals[index] - results[index] ) > max_error ) {
             std::cout << "ERROR: Mismatch for Result " << index << ": " 
-               << results[index].x << " when the expected result was "
-               << exp_vals[index].x << "\n";
+               << results[index] << " when the expected result was "
+               << exp_vals[index] << "\n";
          }
-         if ( fabs( exp_vals[index].y - results[index].y ) > max_error ) {
-            std::cout << "ERROR: Mismatch for Result " << index << ": " 
-               << results[index].y << " when the expected result was "
-               << exp_vals[index].y << "\n";
-         }
-         if ( fabs( exp_vals[index].z - results[index].z ) > max_error ) {
-            std::cout << "ERROR: Mismatch for Result " << index << ": " 
-               << results[index].z << " when the expected result was "
-               << exp_vals[index].z << "\n";
-         }
-         if ( fabs( exp_vals[index].w - results[index].w ) > max_error ) {
-            std::cout << "ERROR: Mismatch for Result " << index << ": " 
-               << results[index].w << " when the expected result was "
-               << exp_vals[index].w << "\n";
-         }
+
+         //if ( fabs( exp_vals[index].x - results[index].x ) > max_error ) {
+         //   std::cout << "ERROR: Mismatch for Result " << index << ": " 
+         //      << results[index].x << " when the expected result was "
+         //      << exp_vals[index].x << "\n";
+         //}
+         //if ( fabs( exp_vals[index].y - results[index].y ) > max_error ) {
+         //   std::cout << "ERROR: Mismatch for Result " << index << ": " 
+         //      << results[index].y << " when the expected result was "
+         //      << exp_vals[index].y << "\n";
+         //}
+         //if ( fabs( exp_vals[index].z - results[index].z ) > max_error ) {
+         //   std::cout << "ERROR: Mismatch for Result " << index << ": " 
+         //      << results[index].z << " when the expected result was "
+         //      << exp_vals[index].z << "\n";
+         //}
+         //if ( fabs( exp_vals[index].w - results[index].w ) > max_error ) {
+         //   std::cout << "ERROR: Mismatch for Result " << index << ": " 
+         //      << results[index].w << " when the expected result was "
+         //      << exp_vals[index].w << "\n";
+         //}
+
       } // end of for loop
 
       std::cout << "Kernel Outputs matched expected\n";

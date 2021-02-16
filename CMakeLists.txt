@@ -42,6 +42,7 @@ set(INC_DIRS
 set(SRCS
    "src/my_utils.cpp"
    "src/my_file_io_funcs.cpp"
+   "src/my_cuda_utils.cpp"
    "src/add_kernel.cu"
    "src/add.cu"
    "src/main.cpp"

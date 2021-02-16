@@ -43,4 +43,22 @@
 }
 
 
+float4 operator+( const float4& lval, const float4& rval );
+float4 operator-( const float4& lval, const float4& rval );
+bool operator>( const float4& lval, const float4& rval );
+bool operator<( const float4& lval, const float4& rval );
+bool operator==( const float4& lval, const float4& rval );
+float4 fabs( const float4& val );
+
+template<class _CharT, class _Traits>
+std::basic_ostream<_CharT, _Traits>&
+operator<<(std::basic_ostream<_CharT, _Traits>& __os, const float4& val) {
+    std::basic_ostringstream<_CharT, _Traits> __s;
+    __s.flags(__os.flags());
+    __s.imbue(__os.getloc());
+    __s.precision(__os.precision());
+    __s << "{" << val.x << ", " << val.y << ", " << val.z << ", " << val.w << "}";
+    return __os << __s.str();
+}
+
 
