@@ -1,5 +1,4 @@
-#ifndef __ADD_KERNEL__
-#define __ADD_KERNEL__
+#pragma once
 
 #include "my_cuda_utils.hpp"
 
@@ -14,4 +13,3 @@ __global__ void add(float4* __restrict__ d_results, float4* const __restrict__ d
 
 
 
-#endif
