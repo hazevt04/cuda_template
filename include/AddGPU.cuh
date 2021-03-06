@@ -12,11 +12,14 @@
 
 #include "VariadicToOutputStream.hpp"
 
+#include <iterator>
+
 template<typename T>
 class AddGPU {
 private:
    managed_vector_host<T> lvals;
    managed_vector_host<T> rvals;
+   managed_vector_host<T> exp_sums;
    managed_vector_global<T> sums;
    int num_vals;
    bool debug;
@@ -37,8 +40,9 @@ public:
          debug_cout( debug, __func__, "(): num_vals is ", num_vals, "\n" );
          lvals.reserve( num_vals );
          rvals.reserve( num_vals );
+         exp_sums.reserve( num_vals );
          sums.reserve( num_vals );
-         debug_cout( debug, __func__, "(): after reserving vectors for sums, lvals and rvals\n" );
+         debug_cout( debug, __func__, "(): after reserving vectors for sums, exp_sums, lvals and rvals\n" );
 
          stream_ptr = my_make_unique<cudaStream_t>();
          try_cudaStreamCreate( stream_ptr.get() );
@@ -53,12 +57,15 @@ public:
    void gen_data( int seed = 0 ) {
       lvals.resize(num_vals);
       rvals.resize(num_vals);
+      exp_sums.resize(num_vals);
       std::iota( lvals.begin(), lvals.end(), 1 );
       std::iota( rvals.begin(), rvals.end(), 1 );
+      std::iota( exp_sums.begin(), exp_sums.end(), 2 );
       
       if (debug) {
          print_vec<T>( lvals, num_vals, "Generated Lvals:\n", " " ); 
          print_vec<T>( rvals, num_vals, "Generated Rvals:\n", " " ); 
+         print_vec<T>( exp_sums, num_vals, "Expected Sums:\n", " " ); 
       }
    }
 

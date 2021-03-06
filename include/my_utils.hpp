@@ -79,9 +79,16 @@
 #  define MAX(a,b) ((a) > (b)) ? (a) : (b);
 #endif
 
+#ifndef MIN
+#  define MIN(a,b) ((a) < (b)) ? (a) : (b);
+#endif
 
 #ifndef CEILING
 #  define CEILING(a,b) ((a) + ((b)-1))/(b);
+#endif
+
+#ifndef dout
+#  define dout debug && std::cout
 #endif
 
 // Already included in C++14
@@ -127,6 +134,36 @@ void print_vec( const std::vector<T>& vals, const char* prefix = "", const char*
    std::cout << "\n";
 }
 
+template <class T>
+bool compare_vecs( const std::vector<T>& lvals, const std::vector<T>& rvals, const char* lprefix = "Lval: ", 
+   const char* rprefix = "Rval: ", const bool& debug = false ) {
+   
+   int num_vals = lvals.size();
+   for(int index = 0; index < num_vals; ++index ) {
+      if ( lvals[index] != rvals[index] ) {
+         dout << "Mismatch at index " << index << ":\n";
+         dout << lprefix << lvals[index] << "\n";
+         dout << rprefix << rvals[index] << "\n";
+         return false;
+      }
+   }
+   return true;
+}
+
+template <class T>
+bool compare_vecs( const T* lvals, const T* rvals, const int& num_vals, const char* lprefix = "Lval: ", 
+   const char* rprefix = "Rval: ", const bool& debug = false ) {
+   
+   for(int index = 0; index < num_vals; ++index ) {
+      if ( lvals[index] != rvals[index] ) {
+         dout << "Mismatch at index " << index << ":\n";
+         dout << lprefix << lvals[index] << "\n";
+         dout << rprefix << rvals[index] << "\n";
+         return false;
+      }
+   }
+   return true;
+}
 void printf_floats( float* const vals, const int num_vals );
 void printf_ints( int* const vals, const int num_vals );
 void printf_uints( unsigned int* const vals, const int num_vals );
