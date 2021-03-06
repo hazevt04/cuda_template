@@ -13,6 +13,7 @@
 #include "VariadicToOutputStream.hpp"
 
 #include <iterator>
+#include <algorithm>
 
 template<typename T>
 class AddGPU {
@@ -60,19 +61,22 @@ public:
       exp_sums.resize(num_vals);
       std::iota( lvals.begin(), lvals.end(), 1 );
       std::iota( rvals.begin(), rvals.end(), 1 );
-      std::iota( exp_sums.begin(), exp_sums.end(), 2 );
+      std::iota( exp_sums.begin(), exp_sums.end(), 1 );
+
+      std::for_each( exp_sums.begin(), exp_sums.end(), [](T& a){ a *= 2; });
       
       if (debug) {
-         print_vec<T>( lvals, num_vals, "Generated Lvals:\n", " " ); 
-         print_vec<T>( rvals, num_vals, "Generated Rvals:\n", " " ); 
-         print_vec<T>( exp_sums, num_vals, "Expected Sums:\n", " " ); 
+         int num_vals_to_print = 10;
+         print_vec<T>( lvals, num_vals_to_print, "Generated Lvals:\n", " " ); 
+         print_vec<T>( rvals, num_vals_to_print, "Generated Rvals:\n", " " ); 
+         print_vec<T>( exp_sums, num_vals_to_print, "Expected Sums:\n", " " ); 
       }
    }
 
    void run();
    
-   void print_sums( const std::string& prefix = "Sums: " ) {
-      print_vec<T>( sums, num_vals, prefix.data(), " " );
+   void print_sums( const int& num_vals_to_print, const std::string& prefix = "Sums: " ) {
+      print_vec<T>( sums, num_vals_to_print, prefix.data(), " " );
    }
 
    ~AddGPU() {

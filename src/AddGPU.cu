@@ -17,6 +17,8 @@ void AddGPU<T>::run() {
       int threads_per_block = 64;
       int num_blocks = (num_vals + threads_per_block - 1) / threads_per_block;
 
+      int num_vals_to_print = 10;
+
       debug_cout( debug, __func__, "(): num_vals is ", num_vals, "\n" ); 
       debug_cout( debug, __func__, "(): threads_per_block is ", threads_per_block, "\n" ); 
       debug_cout( debug, __func__, "(): num_blocks is ", num_blocks, "\n" ); 
@@ -27,8 +29,8 @@ void AddGPU<T>::run() {
       debug_cout( debug, __func__, "(): rvals.size() is ", rvals.size(), "\n" ); 
       
       if ( debug ) {
-         print_vec<T>( lvals, num_vals, "Lvals: ", " " ); 
-         print_vec<T>( rvals, num_vals, "Rvals: ", " " ); 
+         print_vec<T>( lvals, num_vals_to_print, "Lvals: ", " " ); 
+         print_vec<T>( rvals, num_vals_to_print, "Rvals: ", " " ); 
       }
 
       cudaStreamAttachMemAsync( *(stream_ptr.get()), lvals.data(), 0, cudaMemAttachGlobal );
@@ -43,15 +45,17 @@ void AddGPU<T>::run() {
       
       try_cuda_func_throw( cerror, cudaStreamSynchronize( *(stream_ptr.get())  ) );
       
-      compare_vecs<T>( sums.data(), exp_sums.data(), num_vals, "Sums: ", "Expected Sums: ", debug );
-
+      if ( not compare_vecs<T>( sums.data(), exp_sums.data(), num_vals, "Sums: ", "Expected Sums: ", debug ) ) {
+         throw std::runtime_error{ "Mismatch between Sums and Expected Sums" };
+      }
+      
       // sums.size() is 0 because the add_kernel modified the data and not a std::vector function
       debug_cout( debug, __func__, "(): sums.size() is ", sums.size(), "\n" ); 
 
-      if ( debug ) print_sums( "Sums: " );
+      if ( debug ) print_sums( num_vals_to_print, "Sums: " );
 
    } catch( std::exception& ex ) {
-      throw;
+      std::cout << __func__ << "(): ERROR: " << ex.what() << std::endl;
    }
 }
 
