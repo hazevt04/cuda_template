@@ -4,7 +4,7 @@
 
 int main(int argc, char **argv) {
    try {
-      int num_vals = 1 << 6;
+      int num_vals = 1 << 22;
       std::cout << "Number of Vals = " << num_vals << "\n"; 
       bool debug = false;
       AddGPU<int> add_gpu{ num_vals, debug };
