@@ -11,11 +11,11 @@ cmake_minimum_required( VERSION 2.8.0 )
 # without losing half a day fighting cmake
 project( foo )
 
-# Force nvcc AND g++/gcc to use C++11
+# Force nvcc to use c++11 AND g++/gcc to use C++17
 # and make sure it doesn't use GNU std
 set(CMAKE_CUDA_STANDARD 11)
 set(CMAKE_CUDA_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -43,9 +43,7 @@ set(SRCS
    "src/my_utils.cpp"
    "src/my_file_io_funcs.cpp"
    "src/my_cuda_utils.cpp"
-   "src/add_kernel.cu"
-   "src/add.cu"
-   "src/main.cpp"
+   "src/main.cu"
    )
 
 set(EXEC_NAME "${CMAKE_PROJECT_NAME}")

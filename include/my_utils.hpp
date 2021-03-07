@@ -117,11 +117,11 @@ using Duration_ns = std::chrono::duration<float, std::nano>;
 // 
 // // Timed code goes here
 // 
-// Duration_ms section_duration_ms = Steady_Clock::now() - start_point;
+// Duration_ms duration_ms = Steady_Clock::now() - start_point;
 // float seconds = duration_ms.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
-// std::cout << __func__ << "() took " << section_duration_ms.count() << " milliseconds to process "
+// std::cout << __func__ << "() took " << duration_ms.count() << " milliseconds to process "
 //    << num_vals << " values\n";
-// std::cout << __func__ << "() That's an average of " << (num_vals/seconds) " values per second\n\n"; 
+// std::cout << __func__ << "() That's an average of " << (num_vals/seconds) << " values per second\n\n"; 
 
 // Just in case there is no intrinsic
 // From Hacker's Delight
@@ -131,7 +131,11 @@ int my_count_leading_zeros(unsigned int x);
 
 int my_ilog2(unsigned int x);
 
-bool is_divisible_by( const unsigned int& val, const unsigned int& div );
+int my_modulus( const unsigned int& val, const unsigned int& div );
+
+inline bool is_divisible_by( const unsigned int& val, const unsigned int& div ) {
+   return ( 0 == my_modulus( val, div ) );
+}
 
 inline bool is_power_of_two( const int& val ) {
    //return ( my_popcount(val) == 1 );  
@@ -155,6 +159,25 @@ inline bool string_is_palindrome(const std::string& str) {
    return std::equal(str.begin(), str.begin() + str.size()/2, str.rbegin());
 }
 
+template <typename T>
+std::string to_string_with_precision(const T& a_value, const int places = 6) {
+
+    std::ostringstream out;
+
+    out.precision(places);
+    
+    out << std::fixed << a_value;
+    return out.str();
+}
+
+
+// Erase/Remove Idiom
+inline void strip_quotes( std::string& str ) {
+   // move the non quote characters to the front
+   // then erase the rest of the characters (the quotes)
+   str.erase( std::remove( str.begin(), str.end(), '\"' ), str.end() );
+}
+
 
 // From stack overflow:
 // https://stackoverflow.com/questions/14265581/parse-split-a-string-in-c-using-string-delimiter-standard-c
@@ -176,7 +199,7 @@ inline std::string decode_status(int status) {
 }
 
 
-int free_these(void* arg1, ...);
+void free_these(void* arg1, ...);
 
 
 // Hacker's Delight Second Edition pg 44 ('doz')

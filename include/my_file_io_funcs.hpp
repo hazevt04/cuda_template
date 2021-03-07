@@ -335,4 +335,4 @@ void read_text_file(
 }
 
 void test_my_file_io_funcs(
-   std::string filename, const int& num_vals, const bool& inject_error, const bool& debug);
+   std::string& filename, const int& num_vals, const bool& inject_error, const bool& debug);

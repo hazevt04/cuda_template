@@ -30,7 +30,8 @@ void check_num_file_bytes(llong& num_file_bytes, const char* filename, const boo
 
 
 void test_my_file_io_funcs(
-   std::string filename, const int num_vals, const bool inject_error, const bool debug) {
+   std::string& filename, const int& num_vals, const bool& inject_error, const bool& debug) {
+
    try {
       llong num_file_bytes = 0;
 
