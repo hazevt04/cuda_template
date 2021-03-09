@@ -50,6 +50,19 @@ bool operator<( const float4& lval, const float4& rval );
 bool operator==( const float4& lval, const float4& rval );
 float4 fabs( const float4& val );
 
+void gen_float4s( float4* vals, const int& num_vals, const float4& lower, const float4& upper, const int& seed );
+void gen_float4s( float4* vals, const int& num_vals, const float& lower, const float& upper, const int& seed );
+
+void gen_float4s( float4* vals, const int& num_vals, const float4& lower, const float4& upper );
+void gen_float4s( float4* vals, const int& num_vals, const float& lower, const float& upper );
+
+void gen_float4s( std::vector<float4>& vals, const int& num_vals, const float4& lower, const float4& upper, const int& seed ); 
+void gen_float4s( std::vector<float4>& vals, const int& num_vals, const float& lower, const float& upper, const int& seed ); 
+
+void gen_float4s( std::vector<float4>& vals, const int& num_vals, const float4& lower, const float4& upper ); 
+void gen_float4s( std::vector<float4>& vals, const int& num_vals, const float& lower, const float& upper ); 
+
+
 template<class _CharT, class _Traits>
 std::basic_ostream<_CharT, _Traits>&
 operator<<(std::basic_ostream<_CharT, _Traits>& __os, const float4& val) {
