@@ -83,11 +83,6 @@ int main(int argc, char **argv) {
       dout << "Generating input data...\n";
       
       // initialize x_vals and y arrays on the host
-      /*int seed  = 5;*/
-      /*float4 lower = { 1.0f, 1.0f, 1.0f, 1.0f };*/
-      /*float4 upper = { 50.0f, 50.0f, 50.0f, 50.0f };*/
-      /*gen_float4s( x_vals, num_vals, lower, upper, seed );*/
-      /*gen_float4s( y_vals, num_vals, lower, upper, seed );*/
       gen_float4s( x_vals, num_vals );
       gen_float4s( y_vals, num_vals );
 
@@ -106,11 +101,12 @@ int main(int argc, char **argv) {
       std::cout << "CPU: It took " << duration_ms.count() 
          << " milliseconds to add " << num_vals << " float4s\n"; 
       
-      float seconds = duration_ms.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
+
       float actual_num_vals = num_vals * 4.0;
-      
-      std::cout << "CPU: That's a rate of " << (actual_num_vals/seconds) 
-         << " float additions per second\n";
+      float cpu_seconds = duration_ms.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
+
+      std::cout << "CPU: That's a rate of " << (actual_num_vals/(cpu_seconds*1e6)) 
+         << " Million float additions per second\n";
 
       if ( debug ) {
          print_vals<float4>( x_vals.data(), 10, "Other X Vals:\n", "", "\n", "\n" );
@@ -130,10 +126,10 @@ int main(int argc, char **argv) {
       int threads_per_block = 256;
       int num_blocks = (num_vals + threads_per_block - 1) / threads_per_block;
     
-      std::cout << "Trying to run CUDA kernel\n";
+      dout << "Runnin add CUDA kernel\n";
 
       dout << __func__ << "(): threads_per_block is " << threads_per_block << "\n"; 
-      dout << __func__ << "(): num_blocks is " << num_blocks << "\n"; 
+      dout << __func__ << "(): num_blocks is " << num_blocks << "\n\n"; 
 
       try_cuda_func( cerror, cudaEventCreate(&start_event) );
       try_cuda_func( cerror, cudaEventCreate(&stop_event) );
@@ -151,38 +147,28 @@ int main(int argc, char **argv) {
       try_cuda_func( cerror, cudaEventDestroy(start_event) );
       try_cuda_func( cerror, cudaEventDestroy(stop_event) );
 
-      //check_kernel( results, exp_results, num_vals );
-      //float4 max_error = {2.0, 2.0, 2.0, 2.0};
-      //std::cout << "Checking kernel outputs against the expected outputs...\n";
-      //for ( int index = 0; index < num_vals; ++index ) {
-      //   if ( fabs( exp_results[index] - results[index] ) > max_error ) {
-      //      std::cout << "ERROR: Mismatch for Result " << index << ": " 
-      //         << results[index] << " when the expected result was "
-      //         << exp_results[index] << "\n";
-      //   }
-      //}
-
+      //////////////////////////////////////////////////////////////////////
+      //// CHECK KERNEL OUTPUTS
+      ///////////////////////////////////////////////////////////////////////
       float max_diff = 2.0f;
       if( all_float4s_close( results, exp_results, max_diff, debug ) ) {
-         std::cout << "All Results were within " << max_diff << " of expected" << std::endl; 
+         std::cout << "\nAll Results were within " << max_diff << " of expected\n" << std::endl; 
       } else {
-         std::cout << "At least one of the results was more than " << max_diff << " from the expected" << std::endl; 
+         std::cout << "\nAt least one of the results was more than " << max_diff << " from the expected\n" << std::endl; 
       }
 
-      std::cout << "\nGPU: Time for asynchronous transfer and " << kernel_name.c_str() 
+      std::cout << "GPU: Time for asynchronous transfer and " << kernel_name.c_str() 
          << " kernel execution: " << add_milliseconds << " milliseconds for " 
          << num_vals << " items\n";
 
       float add_seconds = add_milliseconds * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
-      actual_num_vals = num_vals * 4.0;
+      std::cout << "GPU: That's a rate of " << (actual_num_vals/(add_seconds*1e6)) << " Million float additions per second\n\n"; 
 
-      std::cout << "GPU: That's a rate of " << (actual_num_vals/add_seconds) << " float additions per second\n\n"; 
-
+      //////////////////////////////////////////////////////////////////////
+      //// DEALLOCATE KERNEL DATA
+      ///////////////////////////////////////////////////////////////////////
       dout << "Freeing memory used for input and output data...\n";
 
-      //try_cuda_free_host( cerror, x_vals );
-      //try_cuda_free_host( cerror, y_vals );
-      //try_cuda_free_host( cerror, results );
       x_vals.clear();
       y_vals.clear();
       results.clear();
