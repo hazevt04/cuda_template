@@ -55,16 +55,16 @@ __global__ void add(float4* __restrict__ d_results, float4* const __restrict__ d
 int main(int argc, char **argv) {
    try {
       cudaError_t cerror = cudaSuccess;
-      bool debug = true;
+      bool debug = false;
       
       // Empirically-determined maximum number
-      int num_vals = 512;//1<<21;
-      size_t num_bytes = num_vals * sizeof(float4);
+      int num_vals = 1<<21;
+      //size_t num_bytes = num_vals * sizeof(float4);
 
       ////////////////////////////////////////////////////////////////////
       // ALLOCATE KERNEL DATA
       ////////////////////////////////////////////////////////////////////
-      std::cout << "Trying to initialize memory for input and output data...\n";
+      dout << "Initializing memory for input and output data...\n";
       // Allocate pinned host memory that is also accessible by the device.
       pinned_mapped_vector<float4> x_vals;
       pinned_mapped_vector<float4> y_vals;
@@ -80,41 +80,45 @@ int main(int argc, char **argv) {
       ////////////////////////////////////////////////////////////////////
       // GENERATE KERNEL DATA
       ////////////////////////////////////////////////////////////////////
-      std::cout << "Trying to generate input data...\n";
+      dout << "Generating input data...\n";
       
       // initialize x_vals and y arrays on the host
-      int seed  = 5;
-      float4 lower = { 1.0f, 1.0f, 1.0f, 1.0f };
-      float4 upper = { 50.0f, 50.0f, 50.0f, 50.0f };
-      gen_float4s( x_vals, num_vals, lower, upper, seed );
-      gen_float4s( y_vals, num_vals, lower, upper, seed );
+      /*int seed  = 5;*/
+      /*float4 lower = { 1.0f, 1.0f, 1.0f, 1.0f };*/
+      /*float4 upper = { 50.0f, 50.0f, 50.0f, 50.0f };*/
+      /*gen_float4s( x_vals, num_vals, lower, upper, seed );*/
+      /*gen_float4s( y_vals, num_vals, lower, upper, seed );*/
+      gen_float4s( x_vals, num_vals );
+      gen_float4s( y_vals, num_vals );
 
       ////////////////////////////////////////////////////////////////////
       // GENERATE EXPECTED DATA
       ////////////////////////////////////////////////////////////////////
-      std::cout << "Trying to generate expected outputs...\n";
+      dout << "Generating expected outputs...\n";
       Time_Point start = Steady_Clock::now();
 
       // Generate expected results
       std::transform( x_vals.begin(), x_vals.end(), y_vals.begin(), exp_results.begin(), 
             []( const float4& x, const float4& y ) { return x + y; } );
 
-      print_vals<float4>( x_vals.data(), 10, "Other X Vals:\n", "", "\n", "\n" );
-      print_vals<float4>( y_vals.data(), 10, "Other Y Vals:\n", "", "\n", "\n" );
-
-      std::cout << __func__ << "(): Expected Results size is " << exp_results.size() << "\n"; 
-
-      print_vals<float4>( exp_results.data(), 10, "Expected Results:\n", "", "\n", "\n" );
       Duration_ms duration_ms = Steady_Clock::now() - start;
 
-      std::cout << __func__ << "(): CPU: It took " << duration_ms.count() 
-         << " milliseconds to add " << num_vals << " values\n"; 
+      std::cout << "CPU: It took " << duration_ms.count() 
+         << " milliseconds to add " << num_vals << " float4s\n"; 
       
       float seconds = duration_ms.count() * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
       float actual_num_vals = num_vals * 4.0;
       
-      std::cout << __func__ << "(): CPU: That's a rate of " << (actual_num_vals/seconds) 
-         << " float additions per second\n"; 
+      std::cout << "CPU: That's a rate of " << (actual_num_vals/seconds) 
+         << " float additions per second\n";
+
+      if ( debug ) {
+         print_vals<float4>( x_vals.data(), 10, "Other X Vals:\n", "", "\n", "\n" );
+         print_vals<float4>( y_vals.data(), 10, "Other Y Vals:\n", "", "\n", "\n" );
+
+         std::cout << __func__ << "(): Expected Results size is " << exp_results.size() << "\n"; 
+         print_vals<float4>( exp_results.data(), 10, "Expected Results:\n", "", "\n", "\n" );
+      }
 
       //////////////////////////////////////////////////////////////////////
       //// RUN KERNEL
@@ -144,15 +148,6 @@ int main(int argc, char **argv) {
       float add_milliseconds = 0;
       try_cuda_func( cerror, cudaEventElapsedTime(&add_milliseconds, start_event, stop_event) );
 
-      std::cout << "GPU: Time for asynchronous transfer and " << kernel_name.c_str() 
-         << " kernel execution: " << add_milliseconds << " milliseconds for " 
-         << num_vals << " items\n";
-
-      float add_seconds = add_milliseconds * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
-      actual_num_vals = num_vals * 4.0;
-
-      std::cout << "GPU: That's a rate of " << (actual_num_vals/add_seconds) << " float additions per second\n"; 
-
       try_cuda_func( cerror, cudaEventDestroy(start_event) );
       try_cuda_func( cerror, cudaEventDestroy(stop_event) );
 
@@ -166,8 +161,24 @@ int main(int argc, char **argv) {
       //         << exp_results[index] << "\n";
       //   }
       //}
-      
-      std::cout << "Freeing memory used for input and output data...\n";
+
+      float max_diff = 2.0f;
+      if( all_float4s_close( results, exp_results, max_diff, debug ) ) {
+         std::cout << "All Results were within " << max_diff << " of expected" << std::endl; 
+      } else {
+         std::cout << "At least one of the results was more than " << max_diff << " from the expected" << std::endl; 
+      }
+
+      std::cout << "\nGPU: Time for asynchronous transfer and " << kernel_name.c_str() 
+         << " kernel execution: " << add_milliseconds << " milliseconds for " 
+         << num_vals << " items\n";
+
+      float add_seconds = add_milliseconds * std::chrono::milliseconds::period::num / std::chrono::milliseconds::period::den;
+      actual_num_vals = num_vals * 4.0;
+
+      std::cout << "GPU: That's a rate of " << (actual_num_vals/add_seconds) << " float additions per second\n\n"; 
+
+      dout << "Freeing memory used for input and output data...\n";
 
       //try_cuda_free_host( cerror, x_vals );
       //try_cuda_free_host( cerror, y_vals );

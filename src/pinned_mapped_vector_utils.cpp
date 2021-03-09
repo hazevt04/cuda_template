@@ -62,11 +62,28 @@ void gen_float4s( pinned_mapped_vector<float4>& vals, const int& num_vals ) {
 
 
 bool all_float4s_close( 
-   pinned_mapped_vector<float4>& actual_vals, std::vector<float4> exp_vals, 
+   const pinned_mapped_vector<float4>& actual_vals, const std::vector<float4>& exp_vals, 
    const float& max_diff, const bool& debug ) {
 
    // TODO: Fill this in with std::mismatch() or something like that
-   return true;
+   auto mispair = std::mismatch( actual_vals.begin(), actual_vals.end(), exp_vals.begin(), 
+      [&]( const float4& act, const float4& exp ) { return (fabs(act-exp) > float4{max_diff, max_diff, max_diff, max_diff}); } );
+   
+   if( ( mispair.first == actual_vals.end() ) ) {
+      dout << "No Mismatches\n";
+      // No mismatch, do something sensible
+      return true;
+   } else {
+      dout << "Mismatch: at " << std::distance(actual_vals.begin(), mispair.first) << ":\n";
+      if ( mispair.first != actual_vals.end() ) {
+         dout << "First:" << *(mispair.first) << "\n";
+      }
+      if ( mispair.second != exp_vals.end() ) {
+         dout << "Second:" << *(mispair.second) << "\n";
+      }
+
+      return false;
+   }   
 }
 
 // end of C++ file for pinned_mapped_vector_utils

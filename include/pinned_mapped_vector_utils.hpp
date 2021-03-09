@@ -12,5 +12,5 @@ void gen_float4s( pinned_mapped_vector<float4>& vals, const int& num_vals, const
 void gen_float4s( pinned_mapped_vector<float4>& vals, const int& num_vals, const float& lower, const float& upper ); 
 void gen_float4s( pinned_mapped_vector<float4>& vals, const int& num_vals ); 
 
-bool all_float4s_close( pinned_mapped_vector<float4>& actual_vals, std::vector<float4> exp_vals, 
+bool all_float4s_close( const pinned_mapped_vector<float4>& actual_vals, const std::vector<float4>& exp_vals, 
     const float& max_diff, const bool& debug );
