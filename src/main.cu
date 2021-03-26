@@ -130,6 +130,7 @@ int main(int argc, char **argv) {
 
       dout << __func__ << "(): threads_per_block is " << threads_per_block << "\n"; 
       dout << __func__ << "(): num_blocks is " << num_blocks << "\n\n"; 
+      dout << "\n";
 
       try_cuda_func( cerror, cudaEventCreate(&start_event) );
       try_cuda_func( cerror, cudaEventCreate(&stop_event) );
