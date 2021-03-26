@@ -12,7 +12,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 
 SET(CUDA_SEPARABLE_COMPILATION ON)
 
-
 # Selects GPU arch flags for nvcc based on target_CUDA_architectures
 # Xavier is compute capability 7.2
 # Support included for Pascal and Volta microarchitectures
