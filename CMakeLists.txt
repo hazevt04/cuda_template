@@ -25,6 +25,7 @@ LIST(APPEND CUDA_NVCC_FLAGS "--use_fast_math")
 
 set(INC_DIRS
    "include"
+   "/lib/cuda/targets/x86_64-linux/include"
    #   ${CUDA_INCLUDE_DIRS}
    )
 
